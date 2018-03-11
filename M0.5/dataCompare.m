@@ -2,6 +2,9 @@ clc
 clear
 NFFT=8192;
 
+MaX=0,0; MaY=0.0;MaZ=0.0;
+
+
 hold on
 box on 
 grid on
@@ -44,3 +47,7 @@ hold on
 plot(tdref(:,1)*1000,tdref(:,2),'g-');
 
 legend('ifft_{C}','zhongjie','ref');
+
+
+Filename1 = ['timehistory_',num2str(10*MaX),num2str(10*MaY),num2str(10*MaZ)];
+print(Filename1,'-depsc'); 
