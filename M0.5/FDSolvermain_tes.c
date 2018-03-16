@@ -11,6 +11,7 @@
 #include "FDSolver.c"
 
 
+
 int main()
 {
 	
@@ -46,11 +47,10 @@ int main()
 
 
   OmegaR = RMaTip*C_0/R;
-	double TR=0,fR=0;
   //double fR = OmegaR/(2*PI);         // rotation frequency
   //double TR = 1/fR;
-  TR = 2*PI/(BNum*OmegaR);
-  fR = 1/TR;
+  double TR = 2.0*PI/(BNum*OmegaR);
+  double fR = 1.0/TR;
   OmegaM = 500*2*PI;         
   //double fM = 500;                  //pulsation frequency
   printf("---------Matematical relations ------------\n\n");
@@ -58,8 +58,7 @@ int main()
   
 
   /* Mathematical relations of TNum data */
-	double Tint = 0;
-  Tint = 27*TR;
+  double Tint = 27*TR;
   DT = Tint/(TNum-1);          //...discrete time or sampling time? or sampling time step?
 
 
@@ -71,10 +70,9 @@ int main()
   }
     
   
-  int NFFT = 0; double ODT =0;
-	NFFT = FNum;
+  int NFFT = (int)pow(2.0,ceil(log((double)FNum)/log(2.0))); 
+	double ODT =Tint/NFFT;
   printf("the next power of FNum->NFFT = %d\n",NFFT);
-  ODT = Tint/NFFT;
   printf("ODT = %lf\n",ODT);
   /* for construction of OTime */
   //double *OTime;r
@@ -88,6 +86,7 @@ int main()
   printf("----checking ----> OTime[5] = %4.4f\n",OTime[5]); /*checking for OTime */
   //double DF = ((1/ODT)/2)*(1/(1.0*FNum/2)); /* here as FNum is int type, should multiply with 1.0 to get the double type DF result */
   double DF = 1/Tint;
+  //double DF=1.0;
   printf("----checking ----> DF = %4.9f\n",DF);
   
   /* reading WriteDataSMeshBlades.dat data */
@@ -245,18 +244,20 @@ int main()
   FRM=make_vector(FRM,TNum); 
   FRP=make_vector(FRP,TNum);
   //double *One;
-  pF = make_dmatrix(FNum,1);
+  pF = make_dmatrix(FNum,OSNum);
   
   //double **pXOYM,**Op,*OF;
  
 
  
   for(int n =0; n< FNum;n++)
-	//for(int n =0; n< FNum;n=n+128)
+  //for(int n =0; n< FNum;n=n+64)
+  //for(int n =0; n< 2;n++)
   {
 	  //double Omega= OmegaM+BNum*(n-5)*OmegaR;
 	  //double Omega= OmegaM+BNum*(n-17)*OmegaR;
-		double Omega =0, ka=0;
+	  double Omega =0.0, ka=0.0;
+		//Omega= OmegaM+BNum*(n-18)*OmegaR;
 	  Omega = (n-1)*2*PI*DF;
 	  ka = Omega/C_0;
 	  //printf("Omega[%d]=%4.4g   ka[%d] = %4.4g\n",n,Omega[n],n,ka[n]);
@@ -335,7 +336,7 @@ int main()
 			// pressure final
 		     // OSNum = 1;
 		    pF[n][m] = (P1[n][m]+P2[n][m]+P3[n][m])/(4*PI*Tint);
-			printf("pF[%d][%d]= %g + %g\n",n,m,creal(pF[n][m]),cimag(pF[n][m]));// m+1 just for show its index not zero but 1
+		    printf("pF[%d][%d]= %g + %g\n",n,m,creal(pF[n][m]),cimag(pF[n][m]));// m+1 just for show its index not zero but 1
 			
 			
 	  }
@@ -351,29 +352,42 @@ int main()
 	  {
 			for(int i=20;i<21;i++)
 			{
-			  fprintf(fwritepF,"%12.10f	%12.10f\n",creal(pF[j][i]),cimag(pF[j][i]));
+									
+				fprintf(fwritepF,"%12.10f	%12.10f\n",creal(pF[j][i]),cimag(pF[j][i]));
 			}
 	  }
-  fclose(fwritepF);
+  fclose(fwritepF); 
+  /*FILE *fwritepF; 
+  fwritepF = fopen("pF.txt","w");	
+	  
+	for(int j=0;j<FNum;j++)
+	  {
+			
+									
+		fprintf(fwritepF,"%12.10f	%12.10f\n",creal(pF[j][21]),cimag(pF[j][21]));
+			
+	  }
+  fclose(fwritepF);*/
 	
 	
 
- Op = make_dmatrix(FNum,1);
+ Op = make_dmatrix(FNum,OSNum);
  pXOYM = make_dmatrix(FNum,1);
   
 		 
     for(int i=0;i<FNum;i++)
 	{
-        //for(int j=0;j<1;j++)
-		for(int j=20;j<21;j++)
-			 {
-			 	pXOYM[i][j] = pF[i][j];
-				printf("pXOYM[%d][%d]= %g + %g\n",i,j,creal(pXOYM[i][j]),cimag(pXOYM[i][j]));
-			 }
+        	for(int j=20;j<21;j++)
+		{
+		
+			 	//pXOYM[i][j] = pF[i][j];
+				//printf("pXOYM[%d][%d]= %g + %g\n",i,j,creal(pXOYM[i][1]),cimag(pXOYM[i][1]));
+				printf("pF[%d][%d]= %g + %g\n",i,j,creal(pF[i][j]),cimag(pF[i][j]));
+		}
 	}
 	
   /* Writing the Pressure spectrum into a Data */
-  FILE *fwrite33;
+ /* FILE *fwrite33;
   fwrite33 = fopen("pXOYM.txt","w");	
 	  
 	for(int j=0;j<FNum;j++)
@@ -383,32 +397,23 @@ int main()
 			  fprintf(fwrite33,"%12.9f	%12.9f\n",creal(pXOYM[j][i]),cimag(pXOYM[j][i]));
 			}
 	  }
-  fclose(fwrite33);
+  fclose(fwrite33);*/
 	
   //double Opreal=0;
   //double Opimag=0;
 
   for(int i=0;i<FNum;i++)
   {
-  	//for(int j=(HalfNum-(ObsrSthetaNum-1))+1;j<HalfNum;j++) // try to use with while loop
+
 		for(int j=20;j<21;j++)
 			{
-	  //pXOYM[i][j] = pF[i][j];
-				Op[i][j] = 2*sqrt(pow(creal(pXOYM[i][j]),2)+pow(cimag(pXOYM[i][j]),2));
-	  //Op[i][j] = 2*fabs(pF[i][j]);
-	  		printf("Op[%d][%d] = %g\n",i,j,Op[i][j]);
+
+				Op[i][j] = 2*sqrt(pow(creal(pF[i][j]),2)+pow(cimag(pF[i][j]),2));
+
+	  			printf("Op[%d][%d] = %g\n",i,j,Op[i][j]);
 	  
 			}
 
-		/*for(int j=20;j<21;j++)
-			{
-	            Opreal=creal(pXOYM[i][j]);
-                Opimag=cimag(pXOYM[i][j]);
-				Op[i][j] = 2*(sqrt(pow(Opreal,2)+pow(Opimag,2)));
-	  //Op[i][j] = 2*fabs(pF[i][j]);
-	  		printf("Op[%d][%d] = %g\n",i,j,Op[i][j]);
-	  
-			}*/
     }
 
 

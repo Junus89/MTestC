@@ -256,7 +256,7 @@ int main()
   {
 	  //double Omega= OmegaM+BNum*(n-5)*OmegaR;
 	  //double Omega= OmegaM+BNum*(n-17)*OmegaR;
-		double Omega =0, ka=0;
+		double Omega =0.0, ka=0.0;
 	  Omega = (n-1)*2*PI*DF;
 	  ka = Omega/C_0;
 	  //printf("Omega[%d]=%4.4g   ka[%d] = %4.4g\n",n,Omega[n],n,ka[n]);

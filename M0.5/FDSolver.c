@@ -102,10 +102,7 @@ double *Ones(int Tnum)
  
 }
 
-//fifthloop function
-/*double complex SP1T=Inicomp; double complex SP1T_sum=Inicomp; double complex SP1B=Inicomp; double complex SP1E=Inicomp;
-double complex SP2T=Inicomp; double complex SP2T_sum=Inicomp; double complex SP2B=Inicomp; double complex SP2E=Inicomp;
-double complex SP3T=Inicomp; double complex SP3T_sum=Inicomp; double complex SP3B=Inicomp; double complex SP3E=Inicomp; */
+
 
 
 
@@ -116,8 +113,11 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
 	double complex SP1T=0.0+0.0*I; double complex SP1B=0.0+0.0*I; double complex SP1E=0.0+0.0*I;
 	double complex SP2T=0.0+0.0*I; double complex SP2B=0.0+0.0*I; double complex SP2E=0.0+0.0*I;
 	double complex SP3T=0.0+0.0*I; double complex SP3B=0.0+0.0*I; double complex SP3E=0.0+0.0*I;
+	SP1=0.0 + 0.0*I;
+	SP2=0.0 + 0.0*I;
+	SP3=0.0 + 0.0*I;
 	double *One;
-    One = Ones(TNum);
+   	One = Ones(TNum);
 
 	
 	
@@ -128,9 +128,9 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
     {
 
 		DataXR[i] = DR*cos(OmegaR*Time[i]+atan2(DY,DX)+Theta);
-        DataYR[i] = DR*sin(OmegaR*Time[i]+atan2(DY,DX)+Theta);
+        	DataYR[i] = DR*sin(OmegaR*Time[i]+atan2(DY,DX)+Theta);
 		//DataZR[i] = DZ*Ones(TNum)[i];
-        DataZR[i] = DZ*One[i];
+       		 DataZR[i] = DZ*One[i];
 		DOrX[i] = OX-DataXR[i];
 		DOrY[i] = OY-DataYR[i];
 		DOrZ[i] = OZ-DataZR[i];
@@ -154,7 +154,7 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
 		Vx[i] = -DR*OmegaR*sin(OmegaR*Time[i]+atan2(DY,DX)+Theta);
 		Vy[i] = DR*OmegaR*cos(OmegaR*Time[i]+atan2(DY,DX)+Theta);
 		//Vz[i] = 0*Ones(TNum)[i];
-        Vz[i] = 0*One[i];
+       		 Vz[i] = 0*One[i];
 		
 		Q[i] = cos(OmegaM*Time[i])*A;
 		//printf("Q[%i] = %4.9f\n",i,Q[i]);
@@ -162,7 +162,7 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
 		Lx[i] = 0*A*Ones(TNum)[i];
 		Ly[i] = 0*A*Ones(TNum)[i];
 		Lz[i] = 0*A*Ones(TNum)[i]; */
-        Lx[i] = 0*A*One[i];
+        	Lx[i] = 0*A*One[i];
 		Ly[i] = 0*A*One[i];
 		Lz[i] = 0*A*One[i];
 		
@@ -183,6 +183,7 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
 		//--------------following the time integration --------------//
 		
 
+		
 		//SP1T += DT*(z1*Omega*Q[i]/DORStar[i])*cexp(-z1*Omega*RGamma[i]);
 		SP1T += DT*(Q[i]/DORStar[i])*cexp(-z1*Omega*RGamma[i]);
 		SP1B = (DT/2)*(Q[0]*cexp(-z1*Omega*RGamma[0]))/DORStar[0];

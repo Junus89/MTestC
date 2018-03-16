@@ -1,11 +1,16 @@
 #ifndef FDSolver_H_
-#include<complex.h> /* Standard Library of Complex Numbers */
+#include<complex.h> 
+#include<math.h>
 #define FDSolver_H_
-#define PI 3.1416 
+//#define PI atan(1,1);
+#define PI	M_PI
 
+#ifndef M_PI
+#define M_PI           3.14159265358979323846
+#endif
 
 //double Tint,TR,fR,OmegaR;
-double DT=0;
+double DT;
 int DSNum, BNum, FNum, TNum;
 double R;
 double OX,OY,OZ, MaX, MaY, MaZ;
@@ -22,7 +27,7 @@ double  **Op, *OF;
 
 double A = 1.0;
 double *OTime;
-double OmegaM=0, OmegaR=0, Gamma=0, C_0,  DX, DY, DZ,  DR, OX, OY,\
+double OmegaM, OmegaR, Gamma, C_0,  DX, DY, DZ,  DR, OX, OY,\
 	 OZ, Theta, *DataXR, *DataYR, *DataZR, *DOrX, *DOrY,  *DOrZ, *DOr, *DORStar, *DOR,\
 		 *DORStarX, *DORStarY, *DORStarZ, *DORX, *DORY,*DORZ, *RGamma, *Vx, *Vy, *Vz, *Q,\
 			 *Lx, *Ly, *Lz, *FxM, *FyM, *FzM, *FxP, *FyP, *FzP;
@@ -30,9 +35,9 @@ double *FRStarM, *FRStarP, *FRM, *FRP;
 double complex z1 = 0.0 + 1.0*I;
 double complex Inicomp = 0.0 + 0.0*I;
 
-double complex SP1=0.0 + 0.0*I;
-double complex SP2=0.0 + 0.0*I;
-double complex SP3=0.0 + 0.0*I;
+double complex SP1;
+double complex SP2;
+double complex SP3;
 
 
 
