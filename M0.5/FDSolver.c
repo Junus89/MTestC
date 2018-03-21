@@ -117,7 +117,7 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
 	SP2=0.0 + 0.0*I;
 	SP3=0.0 + 0.0*I;
 	double *One;
-   	One = Ones(TNum);
+  One = Ones(TNum);
 
 	
 	
@@ -128,9 +128,8 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
     {
 
 		DataXR[i] = DR*cos(OmegaR*Time[i]+atan2(DY,DX)+Theta);
-        	DataYR[i] = DR*sin(OmegaR*Time[i]+atan2(DY,DX)+Theta);
-		//DataZR[i] = DZ*Ones(TNum)[i];
-       		 DataZR[i] = DZ*One[i];
+    DataYR[i] = DR*sin(OmegaR*Time[i]+atan2(DY,DX)+Theta);
+    DataZR[i] = DZ*One[i];
 		DOrX[i] = OX-DataXR[i];
 		DOrY[i] = OY-DataYR[i];
 		DOrZ[i] = OZ-DataZR[i];
@@ -154,18 +153,15 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
 		Vx[i] = -DR*OmegaR*sin(OmegaR*Time[i]+atan2(DY,DX)+Theta);
 		Vy[i] = DR*OmegaR*cos(OmegaR*Time[i]+atan2(DY,DX)+Theta);
 		//Vz[i] = 0*Ones(TNum)[i];
-       		 Vz[i] = 0*One[i];
+    Vz[i] = 0.0*One[i];
 		
 		Q[i] = cos(OmegaM*Time[i])*A;
-		//printf("Q[%i] = %4.9f\n",i,Q[i]);
-		/*
-		Lx[i] = 0*A*Ones(TNum)[i];
-		Ly[i] = 0*A*Ones(TNum)[i];
-		Lz[i] = 0*A*Ones(TNum)[i]; */
-        	Lx[i] = 0*A*One[i];
-		Ly[i] = 0*A*One[i];
-		Lz[i] = 0*A*One[i];
 		
+		Lx[i] = 0.0*cos(OmegaM*Time[i])*cos(OmegaR*Time[i]+atan2(DY,DX)+Theta)*A;
+		Ly[i] = 0.0*cos(OmegaM*Time[i])*sin(OmegaR*Time[i]+atan2(DY,DX)+Theta)*A;
+		Lz[i] = 0.0*One[i];
+
+			
 		FxM[i] = Lx[i];
 		FyM[i] = Ly[i];
 		FzM[i] = Lz[i];
@@ -190,13 +186,13 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
 		SP1E = (DT/2)*(Q[TNum-1]*cexp(-z1*Omega*RGamma[TNum-1]))/DORStar[TNum-1];
 		SP1 = SP1T-SP1B-SP1E;
 		
-		SP2T += DT*(z1*ka*FRM[i]/DORStar[i]+FRStarM[i]/pow(DORStar[i],2)*cexp(-z1*Omega*RGamma[i]));
+		//SP2T += DT*(z1*ka*FRM[i]/DORStar[i]+FRStarM[i]/pow(DORStar[i],2)*cexp(-z1*Omega*RGamma[i]));
+		SP2T += DT*(z1*ka*FRM[i]/DORStar[i]+FRStarM[i]/pow(DORStar[i],2))*cexp(-z1*Omega*RGamma[i]);
 		SP2B = (DT/2)*(z1*ka*FRM[0]/DORStar[0]+FRStarM[0]/pow(DORStar[0],2))*cexp(-z1*Omega*RGamma[0]);
 		SP2E = (DT/2)*(z1*ka*FRM[TNum-1]/DORStar[TNum-1]+FRStarM[TNum-1]/pow(DORStar[TNum-1],2))*cexp(-z1*Omega*RGamma[TNum-1]);
 		SP2 = SP2T-SP2B-SP2E;
 		
-		
-		SP3T += DT*(z1*ka*FRP[i]/DORStar[i]+FRStarP[i]/pow(DORStar[i],2)*cexp(-z1*Omega*RGamma[i]));
+		SP3T += DT*(z1*ka*FRP[i]/DORStar[i]+FRStarP[i]/pow(DORStar[i],2))*cexp(-z1*Omega*RGamma[i]);
 		SP3B = (DT/2)*(z1*ka*FRP[0]/DORStar[0]+FRStarP[0]/pow(DORStar[0],2))*cexp(-z1*Omega*RGamma[0]);
 		SP3E = (DT/2)*(z1*ka*FRP[TNum-1]/DORStar[TNum-1]+FRStarP[TNum-1]/pow(DORStar[TNum-1],2))*cexp(-z1*Omega*RGamma[TNum-1]);
 		SP3 = SP3T-SP3B-SP3E;

@@ -16,7 +16,7 @@ double R;
 double OX,OY,OZ, MaX, MaY, MaZ;
 double Theta=0;
 double DX,DY,DZ,DR;
-double Time[194401];
+double Time[388802];
 
 double complex ****PBD1,****PBD2,****PBD3;
 double complex ***PB1,***PB2,***PB3;
@@ -27,7 +27,7 @@ double  **Op, *OF;
 
 double A = 1.0;
 double *OTime;
-double OmegaM=0, OmegaR=0, Gamma=0, C_0,  DX, DY, DZ,  DR, OX, OY,\
+double OmegaM, OmegaR, Gamma, C_0,  DX, DY, DZ,  DR, OX, OY,\
 	 OZ, Theta, *DataXR, *DataYR, *DataZR, *DOrX, *DOrY,  *DOrZ, *DOr, *DORStar, *DOR,\
 		 *DORStarX, *DORStarY, *DORStarZ, *DORX, *DORY,*DORZ, *RGamma, *Vx, *Vy, *Vz, *Q,\
 			 *Lx, *Ly, *Lz, *FxM, *FyM, *FzM, *FxP, *FyP, *FzP;

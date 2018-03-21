@@ -18,39 +18,7 @@ if(a!=NULL){\
   free_vector(a);\
   a = NULL;\
  }} while (0)
-/*for 3D matrix the macros definition */
-/*#define make_3Dmatrix(a,p,q,r) do {					\
-    size_t make_3Dmatrix_loop_counter_i;						\
-    size_t make_3Dmatrix_loop_counter_j;
-    make_vector(a,(p)+1);							\
-    for (make_3Dmatrix_loop_counter_i = 0;				       \
-	 make_3Dmatrix_loop_counter_i <(p);			       \
-	 make_3Dmatrix_loop_counter_i++)			       \
-      make_vector((a)[make_3Dmatrix_loop_counter],(q));		       \
-    for(make_3Dmatrix_loop_counter_i = 0;			       \
-	make_3Dmatrix_loop_counter_i <(p);		       \
-	make_3Dmatrix_loop_counter_i++)			       \
-      for(make_3Dmatrix_loop_counter_j=0;		       \
-	  make_3Dmatrix_loop_counter_j<(p);                    \
-	  make_3Dmatrix_loop_counter_j++)                      \
-	make_vector((a)[make_3Dmatrix_loop_counter_i][make_3Dmatrix_loop_counter_j], (r));         \
-   (a)[p]=NULL;              \
-} while (0)
 
       
-
-
-
-
-
-
-
-
-
-
-
-
-*/
-
 
 #endif /*H_XMALLOC_H*/

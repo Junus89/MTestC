@@ -1,70 +1,100 @@
 clc
 clear
+close all
+clc
+
+format long
+
+%
+set(0,'DefaultLineLineWidth',1.2)
+set(0,'DefaultaxesLineWidth',1)
+set(0,'DefaultaxesFontSize',15)
+%
+
+
 NFFT=8192;
 
-MaX =0.0; MaY=0.0;MaZ=0.0;
+MaX=0.0; MaY=0.0;MaZ=0.0;
+OmegaR = 2.0*pi*27.0;
+TR = 2.0*pi/OmegaR;
+fR = 1.0/TR;
+OmegaM = 500*2.0*pi; 
+fM = OmegaM/(2*pi);
 
-
-hold on
-box on 
-grid on
-
-px=load('pF.txt');
-pF=px(1:end-12,1)+1i*px(1:end-12,2);
-%pF=px(:,1)+1i*px(:,2);
-%pFf=fliplr(pF);
-
-f=load('IFFT.txt'); %IFFT data from C code
-%f1=2*f(:,2)*NFFT;
-f1=f(:,1)*NFFT;
-
-
-%c=real(ifft(pF,NFFT)*NFFT);
-c=2*real(ifft(pF,NFFT)*NFFT);
-
-OmegaR=0.5*340;
-TR=2*pi/OmegaR;
 Tint=27*TR;
 ODT=Tint/NFFT;
 OTime = ODT*(0:NFFT-1);
 
 
+
 figure(1)
 hold on
-box on
 grid on
+f=load('IFFT.txt'); %IFFT data from C code
+f1=f(:,1)*NFFT;
+
 
 thref=importdata('Subrotatingmonopoletimehistory000.dat');
-plot(thref(:,1),thref(:,2),'ko','linewidth',1.5);
+plot(thref(:,1),thref(:,2),'k*');
+plot(OTime*1000+8.17,2*f1','r-');
+legend('Poletti et al','Predicted')
 
-%tdref=importdata('FDTimePressure1.dat');
+xlabel('{\itt} [ms]')
+ylabel('{\itp''} [Pa]');
 
-plot(OTime*1000+9.33,-2*f1','r-','linewidth',1.5);
-%plot(OTime*1000+9,-c','r-.');% ifft from C code
-%ref=load('FDTimePressure1.txt');
- 
+axis([165 205 -0.15 0.2])
 
-
-
-axis([170 205 -0.15 0.15])
-%legend('C_{ifft}','Ref.');
-%
-
-
-
-legend('Poletti et al','Predicted');
-
+%set(gca,'XTick',(165:5:205))
+%set(gcf, 'PaperPositionMode','Auto')   % Use screen size
 
 Filename1 = ['timehistory_',num2str(10*MaX),num2str(10*MaY),num2str(10*MaZ)];
 print(Filename1,'-depsc'); 
 
+
+%
+%Comparision of pressure spectrum.
+%
+refSp=importdata('Subrotatingmonopolespectra000N.dat');
+Pspec=importdata('FDPressureSpectrum.txt');
+f=Pspec(:,1);
+pF=Pspec(:,2);
+
+
+k = 0;
+FNum = NFFT;
+
+for j = 1:FNum
+        
+    if mod(f(j)-round(fM),round(fR))==0 %?
+    
+        k = k+1;
+        pFN(k) = pF(j);
+        fN(k) = f(j);
+        
+    end
+    
+end
+
+FNumN = length(refSp);
+
+
 figure(2)
+grid on
 hold on
 box on
-grid on
 
-refS=importdata('Subrotatingmonopolespectra000N.txt');
-Fspec=importdata('FDPressureSpectrum.txt');
-stem(Fspec(:,1),Fspec(:,2),'r-','linewidth',1.5);
-stem(refS(:,1),refS(:,2),'g-.','linewidth',1.5);
-axis([0,1500,0,0.02]);
+plot(refSp(:,1),refSp(:,2),'k*')
+stem(refSp(:,1),pFN(1:FNumN),'rs')
+
+
+legend('Poletti et al','Predicted')
+
+xlabel('{\itf} [Hz]')
+ylabel('{\itp''} [Pa]');
+
+axis([0 1500 -0.0001 0.02])
+
+set(gcf, 'PaperPositionMode','Auto')   % Use screen size
+Filename2 = ['spectrum_',num2str(10*MaX),num2str(10*MaY),num2str(10*MaZ)];
+print(Filename2,'-depsc'); 
+

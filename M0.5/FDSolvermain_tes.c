@@ -46,12 +46,15 @@ int main()
   fclose(fp_f);
 
 
-  OmegaR = RMaTip*C_0/R;
+  //OmegaR = RMaTip*C_0/R;
   //double fR = OmegaR/(2*PI);         // rotation frequency
   //double TR = 1/fR;
+	OmegaR = 2.0*PI*27.0;
   double TR = 2.0*PI/(BNum*OmegaR);
   double fR = 1.0/TR;
-  OmegaM = 500*2*PI;         
+
+	//double fR = 27.0;
+  OmegaM = 500*2.0*PI;         
   //double fM = 500;                  //pulsation frequency
   printf("---------Matematical relations ------------\n\n");
   printf("OmegaR = %4.4f [rad/s], fR = %4.4f [hz], TR = %4.4f [s], OmegaM = %4.4f [rad/s]\n\n",OmegaR, fR, TR, OmegaM);
@@ -59,6 +62,7 @@ int main()
 
   /* Mathematical relations of TNum data */
   double Tint = 27*TR;
+	//double Tint =1.0;
   DT = Tint/(TNum-1);          //...discrete time or sampling time? or sampling time step?
 
 
@@ -85,8 +89,8 @@ int main()
     }
   printf("----checking ----> OTime[5] = %4.4f\n",OTime[5]); /*checking for OTime */
   //double DF = ((1/ODT)/2)*(1/(1.0*FNum/2)); /* here as FNum is int type, should multiply with 1.0 to get the double type DF result */
-  double DF = 1/Tint;
-  //double DF=1.0;
+  //double DF = 1/Tint;
+  double DF=1.0;
   printf("----checking ----> DF = %4.9f\n",DF);
   
   /* reading WriteDataSMeshBlades.dat data */
@@ -250,15 +254,14 @@ int main()
  
 
  
-  for(int n =0; n< FNum;n++)
-  //for(int n =0; n< FNum;n=n+64)
+  for(int n =0; n<FNum;n++)
+  //for(int n =0; n< FNum;n=n+16)
   //for(int n =0; n< 2;n++)
   {
-	  //double Omega= OmegaM+BNum*(n-5)*OmegaR;
-	  //double Omega= OmegaM+BNum*(n-17)*OmegaR;
+
 	  double Omega =0.0, ka=0.0;
-		//Omega= OmegaM+BNum*(n-18)*OmegaR;
-	  Omega = (n-1)*2*PI*DF;
+		//Omega= OmegaM+BNum*(n-18)*OmegaR; /* first omega formula */
+	  Omega = (n-1)*2*PI*DF; /* second omega formula */
 	  ka = Omega/C_0;
 	  //printf("Omega[%d]=%4.4g   ka[%d] = %4.4g\n",n,Omega[n],n,ka[n]);
   
@@ -311,7 +314,7 @@ int main()
 					Transc1 += PBD3[n][m][k][j];
 				
 					printf("\n------checking-----: SP1 = %g + %gi\n",creal(SP1),cimag(SP1));
-					printf("the output is PBD1[%d][%d][%d][%d] = %g + %gi\n",n,m,k,j,creal(PBD1[n][m][k][j]),cimag(PBD1[n][m][k][j]));
+					printf("the output is PBD1[%d][%d][%d][%d] = %g + %gi\n",n,m,k,j,creal(PBD2[n][m][k][j]),cimag(PBD1[n][m][k][j]));
 					
 		  	  	}
 				printf("the output is PBD1[%d][%d][%d][%d] = %g + %gi\n",n,m,k,j,creal(PBD1[n][m][k][j]),cimag(PBD1[n][m][k][j]));
@@ -335,8 +338,8 @@ int main()
 			
 			// pressure final
 		     // OSNum = 1;
-		    pF[n][m] = (P1[n][m]+P2[n][m]+P3[n][m])/(4*PI*Tint);
-		    printf("pF[%d][%d]= %g + %g\n",n,m,creal(pF[n][m]),cimag(pF[n][m]));// m+1 just for show its index not zero but 1
+		  pF[n][m] = (P1[n][m]+P2[n][m]+P3[n][m])/(4*PI*Tint);
+		  printf("pF[%d][%d]= %g + %g\n",n,m,creal(pF[n][m]),cimag(pF[n][m]));// m+1 just for show its index not zero but 1
 			
 			
 	  }
@@ -357,22 +360,12 @@ int main()
 			}
 	  }
   fclose(fwritepF); 
-  /*FILE *fwritepF; 
-  fwritepF = fopen("pF.txt","w");	
-	  
-	for(int j=0;j<FNum;j++)
-	  {
-			
-									
-		fprintf(fwritepF,"%12.10f	%12.10f\n",creal(pF[j][21]),cimag(pF[j][21]));
-			
-	  }
-  fclose(fwritepF);*/
+
 	
 	
 
  Op = make_dmatrix(FNum,OSNum);
- pXOYM = make_dmatrix(FNum,1);
+ pXOYM = make_dmatrix(FNum,OSNum);
   
 		 
     for(int i=0;i<FNum;i++)
@@ -410,7 +403,7 @@ int main()
 
 				Op[i][j] = 2*sqrt(pow(creal(pF[i][j]),2)+pow(cimag(pF[i][j]),2));
 
-	  			printf("Op[%d][%d] = %g\n",i,j,Op[i][j]);
+	  		printf("Op[%d][%d] = %12.10f\n",i,j,Op[i][j]);
 	  
 			}
 
@@ -426,7 +419,7 @@ int main()
   for(rr=0;rr<FNum;rr++)
   {
 	  //OF[rr] = (OmegaM+BNum*(rr-5)*OmegaR)/(2*PI);
-	  //OF[rr] = (OmegaM+BNum*(rr-17)*OmegaR)/(2*PI);
+	  //OF[rr] = (OmegaM+BNum*(rr-18)*OmegaR)/(2*PI);
 		OF[rr] = ((rr-1)*2*PI*DF)/(2*PI);
 		
 	  printf("OF[%d] = %g\n",rr,OF[rr]);
@@ -444,7 +437,7 @@ int main()
 	  
 	  for(int j=0;j<FNum;j++)
 	  {
-		  fprintf(fwrite1,"%12.6f\t %12.6f\n",OF[j],Op[j][k]);
+		  fprintf(fwrite1,"%12.10f\t %12.10f\n",OF[j],Op[j][k]);
 	  }
 	  
   }
@@ -471,9 +464,12 @@ int main()
   printf("------checking-----: DataZR[3] = %g\n",DataZR[34]);
   printf("----- checking ----: DX = %g, DY = %g, DZ = %g, DR = %g\n",DX,DY,DZ,DR);
   printf("------checking-----: DORStar[3] = %g\n",DORStar[343]);
-  printf("------checking-----: DOrX[43] = %g\n",DOrX[143]);
-  printf("------checking-----: DOrY[43] = %g\n",DOrY[143]);
-  printf("------checking-----: DORZ[43] = %g\n",DOrZ[143]);
+  printf("------checking-----: DOrX[0] = %g\n",DOrX[0]);
+  printf("------checking-----: DOrX[TNum-1] = %g\n",DOrX[TNum-1]);
+  printf("------checking-----: DORY[0] = %g\n",DOrY[0]);
+  printf("------checking-----: DOrY[TNum-1] = %g\n",DOrY[TNum-1]);
+  printf("------checking-----: DOrZ[43] = %g\n",DOrZ[0]);
+  printf("------checking-----: DORZ[43] = %g\n",DOrZ[TNum-1]);
   printf("------checking-----: DOr[43] = %g\n",DOr[143]);
   printf("------checking-----: DOR[43] = %g\n",DOR[143]);
   printf("------checking-----: DORStarX[143] = %g\n",DORStarX[143]);
@@ -490,12 +486,18 @@ int main()
   printf("------checking-----: Q[0] = %g\n",Q[0]);
   printf("------checking-----: Q[TNum-1] = %g\n",Q[TNum-1]);
   printf("------checking-----: OmegaM = %g\n",OmegaM);
-  printf("------checking-----: Lx[25] = %g\n",Lx[25]);
-  printf("------checking-----: Ly[63] = %g\n",Ly[63]);
-  printf("------checking-----: Lz[44] = %g\n",Lz[44]);
-  printf("------checking-----: FxM[255] = %g\n",FxM[255]);
-  printf("------checking-----: FyM[165] = %g\n",FyM[165]);
-  printf("------checking-----: FzM[165] = %g\n",FzM[165]);
+  printf("------checking-----: Lx[0] = %g\n",Lx[0]);
+  printf("------checking-----: Lx[TNum-1] = %g\n",Lx[TNum-1]);
+  printf("------checking-----: Ly[0] = %g\n",Ly[0]);
+  printf("------checking-----: Ly[TNum-1] = %g\n",Ly[TNum-1]);
+  printf("------checking-----: Lz[0] = %g\n",Lz[0]);
+  printf("------checking-----: Lz[TNum-1] = %g\n",Lz[TNum-1]);
+  printf("------checking-----: FxM[0] = %g\n",FxM[0]);
+  printf("------checking-----: FxM[TNum-1] = %g\n",FxM[TNum-1]);
+  printf("------checking-----: FyM[0] = %g\n",FyM[0]);
+  printf("------checking-----: FyM[TNum-1] = %g\n",FyM[TNum-1]);
+  printf("------checking-----: FzM[0] = %g\n",FzM[0]);
+  printf("------checking-----: FzM[TNum-1] = %g\n",FzM[TNum-1]);
   printf("------checking-----: FxP[5] = %g\n",FxP[5]); // here MaX, MaY, and MaZ are zero, is given from the file so the remaining result is zero
   printf("------checking-----: FyP[311] = %g\n",FyP[311]);
   printf("------checking-----: FzP[265] = %g\n",FzP[265]);
